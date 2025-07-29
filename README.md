@@ -162,56 +162,6 @@ java -jar Client.jar monitor -f ~/Documents
 java -jar Client.jar monitor -v <vault-name> -f ~/Documents
 ```
 
-## 🏛️ Architecture
-
-### System Components
-
-```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   Client A      │────▶│  Share Vault    │◀────│    Client B     │
-│  (sv CLI)       │     │    Server       │     │   (sv CLI)      │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
-```
-
-### Server APIs
-
-- `POST /vault` - Create new vault with initial files
-- `POST /vault/:name/sync` - Sync changes (change logs + files)
-- `GET /vault/:name/change_logs` - Get all change logs
-- `GET /vault/:name/change_logs/since/:timestamp` - Get incremental changes
-- `GET /vault/:name/files/:hash` - Get file by hash
-- `GET /vault?name=:name` - Download entire vault as ZIP
-- `WebSocket /v` - Real-time change notifications
-
-### Client Directory Structure
-
-Each monitored folder contains a `.sv/` directory:
-
-```
-.sv/
-├── config.json          # Vault configuration
-├── files/               # Files stored by hash
-│   ├── abc123...
-│   └── def456...
-└── change_logs/         # Local change log history
-    ├── 001704067200000.json
-    └── 002704067400000.json
-```
-
-### Change Log Format
-
-```json
-{
-    "timestamp": 1704067200000,
-    "parent": 1704067100000,
-    "changes": {
-        "added": [{ "path": "file1.txt", "hash": "abc123..." }],
-        "modified": [{ "path": "file2.txt", "hash": "def456..." }],
-        "deleted": ["file3.txt"]
-    }
-}
-```
-
 ## 🔧 Advanced Configuration
 
 ### Custom Server URL
