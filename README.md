@@ -15,6 +15,7 @@ A robust Java-based file synchronization system with real-time collaboration cap
 ## 📦 Quick Start
 
 ### Prerequisites
+
 - Java 21 or higher
 - Maven 3.8+ (for building from source)
 
@@ -22,19 +23,22 @@ A robust Java-based file synchronization system with real-time collaboration cap
 
 1. **Download pre-built JARs** (or build from source)
 2. **Start the server:**
-   ```bash
-   java -jar Server.jar
-   ```
-   Server will start on `http://localhost:4289`
+
+    ```bash
+    java -jar Server.jar
+    ```
+
+    Server will start on `http://localhost:4289`
 
 3. **Use the client:**
-   ```bash
-   # Create a new vault from current folder
-   java -jar Client.jar monitor
-   
-   # Monitor existing vault
-   java -jar Client.jar monitor -v <vault-name> -f <folder>
-   ```
+
+    ```bash
+    # Create a new vault from current folder
+    java -jar Client.jar monitor
+
+    # Monitor existing vault
+    java -jar Client.jar monitor -v <vault-name> -f <folder>
+    ```
 
 ## 🏗️ Building from Source
 
@@ -56,11 +60,13 @@ mvn clean package
 ### Server Component
 
 Start the Share Vault server:
+
 ```bash
 java -jar Server.jar
 ```
 
 The server provides:
+
 - **HTTP API** for vault operations
 - **WebSocket endpoint** for real-time notifications
 - **File storage** with hash-based deduplication
@@ -70,6 +76,7 @@ The server provides:
 The client is a CLI tool for creating and monitoring vaults:
 
 #### Create a New Vault
+
 ```bash
 # Create vault from current directory
 java -jar Client.jar monitor
@@ -79,12 +86,14 @@ java -jar Client.jar monitor -f /path/to/folder
 ```
 
 This will:
+
 1. Scan all files in the folder
 2. Create a vault on the server
 3. Return a vault name (share this with collaborators)
 4. Start real-time monitoring
 
 #### Monitor an Existing Vault
+
 ```bash
 # Monitor vault in current directory
 java -jar Client.jar monitor -v <vault-name>
@@ -94,6 +103,7 @@ java -jar Client.jar monitor -v <vault-name> -f /path/to/folder
 ```
 
 #### Command Options
+
 ```bash
 Usage: sv [-hV] [COMMAND]
 Share Vault - Folder synchronization tool
@@ -114,6 +124,7 @@ Monitor Command Options:
 ### Scenario: Team Collaboration
 
 **Team Lead (Alice):**
+
 ```bash
 # Create shared vault from project folder
 cd /projects/my-app
@@ -125,6 +136,7 @@ java -jar Client.jar monitor
 ```
 
 **Team Member (Bob):**
+
 ```bash
 # Join the vault
 mkdir /workspace/shared-project
@@ -136,6 +148,7 @@ java -jar Client.jar monitor -v abc123xyz...
 ```
 
 ### Scenario: Personal Sync
+
 ```bash
 # Computer 1: Create vault
 java -jar Client.jar monitor -f ~/Documents
@@ -168,6 +181,7 @@ java -jar Client.jar monitor -v <vault-name> -f ~/Documents
 ### Client Directory Structure
 
 Each monitored folder contains a `.sv/` directory:
+
 ```
 .sv/
 ├── config.json          # Vault configuration
@@ -183,132 +197,32 @@ Each monitored folder contains a `.sv/` directory:
 
 ```json
 {
-  "timestamp": 1704067200000,
-  "parent": 1704067100000,
-  "changes": {
-    "added": [{"path": "file1.txt", "hash": "abc123..."}],
-    "modified": [{"path": "file2.txt", "hash": "def456..."}], 
-    "deleted": ["file3.txt"]
-  }
+    "timestamp": 1704067200000,
+    "parent": 1704067100000,
+    "changes": {
+        "added": [{ "path": "file1.txt", "hash": "abc123..." }],
+        "modified": [{ "path": "file2.txt", "hash": "def456..." }],
+        "deleted": ["file3.txt"]
+    }
 }
 ```
 
 ## 🔧 Advanced Configuration
 
 ### Custom Server URL
+
 ```bash
 java -jar Client.jar monitor --server http://my-server:8080
 ```
 
 ### Custom Debounce Time
+
 ```bash
 # Wait 10 seconds before processing file changes
 java -jar Client.jar monitor -d 10
 ```
 
-### Environment Variables
-```bash
-# Set default server URL
-export SV_SERVER_URL=http://my-server:8080
+## 🚀 Development
 
-# Set default debounce time
-export SV_DEBOUNCE_SECONDS=10
-```
-
-## 🛠️ Development
-
-### Project Structure
-```
-src/main/java/org/one_cedrus/
-├── Client.java                    # CLI client entry point
-├── Server.java                    # HTTP server entry point
-├── communication/                 # Network layer
-│   ├── ApiClient.java            # HTTP client for vault operations
-│   ├── VWebSocket.java           # WebSocket server handler
-│   └── VWebSocketClient.java     # WebSocket client
-├── manager/                       # Core business logic
-│   ├── VaultManager.java         # Main vault operations coordinator
-│   ├── ChangeLogManager.java     # Change log persistence
-│   └── SharedVaultDirManager.java # Local vault directory management
-├── service/                       # Business services
-│   └── DirectoryStateService.java # Directory state management
-├── util/                          # Utilities
-│   ├── HashCalculator.java       # SHA-256 hash calculations
-│   ├── FileWatcher.java          # File system monitoring
-│   ├── VaultConfig.java          # Configuration management
-│   └── VaultUtils.java           # General utilities
-├── shared/                        # Shared data models
-│   ├── ChangeLog.java            # Change log data structure
-│   ├── FileChange.java           # File change representation
-│   └── MessageType.java          # WebSocket message types
-└── exception/                     # Custom exception hierarchy
-    ├── VaultException.java        # Base exception
-    ├── SyncException.java         # Sync operation failures
-    ├── ConfigurationException.java # Configuration errors
-    ├── VaultNotInitializedException.java # Initialization errors
-    └── HashCalculationException.java # Hash calculation failures
-```
-
-### Code Quality Features
-- **Custom Exception Hierarchy** - Specific error types for different failure scenarios
-- **Service Layer Architecture** - Clear separation of concerns
-- **Hash-based Deduplication** - Efficient storage and conflict resolution
-- **Comprehensive Logging** - Structured logging with [INFO], [ERROR], [DEBUG] prefixes
-- **Debounced File Watching** - Efficient batch processing of file changes
-
-### Testing
-```bash
-# Compile and test
-mvn clean compile test
-
-# Run integration tests
-mvn verify
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Troubleshooting
-
-### Common Issues
-
-**"Connection refused" when starting client:**
-- Ensure the server is running: `java -jar Server.jar`
-- Check if port 4289 is available
-- Verify server URL configuration
-
-**"Vault not found" error:**
-- Double-check the vault name
-- Ensure you have network connectivity to the server
-- Verify the server has the vault data
-
-**File changes not syncing:**
-- Check if the file watcher has permission to monitor the directory
-- Verify WebSocket connection in logs
-- Check for network connectivity issues
-
-**Build fails:**
-- Ensure Java 21+ is installed and configured
-- Verify Maven 3.8+ is available
-- Check internet connectivity for dependency downloads
-
-### Debug Mode
-```bash
-# Enable verbose logging
-java -Dlogging.level.org.one_cedrus=DEBUG -jar Client.jar monitor
-```
-
-### Support
-For issues and questions:
-- Check existing [Issues](../../issues)
-- Create a new issue with detailed description
-- Include system information and error logs 
+- The project is still in heavy development. But the core features are available now.
+- Also, the project is heavly inspired by Git.
