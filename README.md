@@ -1,5 +1,10 @@
 # Shared Vault - Real-time File Synchronization System
 
+> ⚠️ Disclaimer:
+> This project is intended for academic and educational purposes only.
+> It is not fully tested and not recommended for production use.
+> Use it at your own risk
+
 A robust Java-based file synchronization system with real-time collaboration capabilities, featuring a server component and a command-line client.
 
 ## 🚀 Features
