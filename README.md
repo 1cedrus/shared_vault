@@ -1,4 +1,4 @@
-# Share Vault - Real-time File Synchronization System
+# Shared Vault - Real-time File Synchronization System
 
 A robust Java-based file synchronization system with real-time collaboration capabilities, featuring a server component and a command-line client.
 
